@@ -304,7 +304,7 @@ class CLIController:
         for query_name, query_analysis in query_analyses.items():
             suggestions = query_analysis.get('optimization_suggestions', [])
             self._print_info(f"{query_name}:")
-            for suggestion in suggestions[:3]:  # Show top 3 suggestions
+            for suggestion in suggestions[:3]: 
                 self._print_text(f"  • {suggestion}")
     
     def _show_optimization_recommendations(self, opt_service: DatabaseOptimizationService):

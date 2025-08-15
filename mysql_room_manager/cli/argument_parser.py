@@ -13,7 +13,6 @@ class ArgumentParser:
         self._setup_arguments()
     
     def _setup_arguments(self):
-        """Setup command line arguments."""
         subparsers = self.parser.add_subparsers(dest='command', help='Available commands')
 
         import_parser = subparsers.add_parser('import', help='Import data from JSON files')

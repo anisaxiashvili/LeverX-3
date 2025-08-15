@@ -108,7 +108,6 @@ class SchemaManager(DatabaseSchemaInterface):
                         cursor.execute(index_query)
                         self.logger.debug(f"Created optimization index {i+1}")
                     except Exception as e:
-                        # Log warning but continue - index might already exist
                         self.logger.warning(f"Index creation warning: {e}")
                 
                 conn.commit()
