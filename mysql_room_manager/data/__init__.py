@@ -1,16 +1,14 @@
-"""Data layer for MySQL Student Room Manager."""
-
-from .loaders import DataLoaderFactory, JSONDataLoader
+from .loaders import LoaderFactory, JsonLoader
 from .repositories import (
-    StudentRepository,
-    RoomRepository,
-    AnalyticsRepository
+    StudentRepo,
+    RoomRepo,
+    AnalyticsRepo
 )
 
 __all__ = [
-    'DataLoaderFactory',
-    'JSONDataLoader',
-    'StudentRepository',
-    'RoomRepository', 
-    'AnalyticsRepository'
+    'LoaderFactory',
+    'JsonLoader',
+    'StudentRepo',
+    'RoomRepo', 
+    'AnalyticsRepo'
 ]

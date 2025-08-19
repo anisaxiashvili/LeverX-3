@@ -2,17 +2,18 @@
 import logging
 from typing import List, Dict, Any, Optional
 
-from ...interfaces.repository_interface import RoomRepositoryInterface
-from ...database.connection_manager import ConnectionManager
-from ...database.transaction_manager import TransactionManager
+from ...interfaces.repo_interface import RoomRepoInterface
+from ...database.conn_manager import ConnManager
+from ...database.tx_manager import TxManager
 from ...models.room import Room
-from ...exceptions.custom_exceptions import QueryExecutionError
+from ...exceptions.exceptions import QueryError
 
 
-class RoomRepository(RoomRepositoryInterface):    
-    def __init__(self, connection_manager: ConnectionManager):
-        self.connection_manager = connection_manager
-        self.transaction_manager = TransactionManager(connection_manager)
+class RoomRepo(RoomRepoInterface): 
+    
+    def __init__(self, conn_manager: ConnManager):
+        self.conn_manager = conn_manager  
+        self.tx_manager = TxManager(conn_manager)
         self.logger = logging.getLogger(__name__)
     
     def insert_rooms(self, rooms: List[Dict[str, Any]]) -> int:
@@ -26,7 +27,7 @@ class RoomRepository(RoomRepositoryInterface):
             
             room_tuples = [room.to_db_tuple() for room in room_models]
             
-            with self.transaction_manager.transaction() as conn:
+            with self.tx_manager.transaction() as conn:
                 cursor = conn.cursor()
                 
                 insert_query = """
@@ -45,11 +46,11 @@ class RoomRepository(RoomRepositoryInterface):
         except Exception as e:
             error_msg = f"Failed to insert rooms: {e}"
             self.logger.error(error_msg)
-            raise QueryExecutionError(error_msg)
+            raise QueryError(error_msg)
     
     def get_room_by_id(self, room_id: int) -> Optional[Dict[str, Any]]:
         try:
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor(dictionary=True)
                 cursor.execute("SELECT * FROM rooms WHERE id = %s", (room_id,))
                 result = cursor.fetchone()
@@ -62,7 +63,7 @@ class RoomRepository(RoomRepositoryInterface):
     
     def count_rooms(self) -> int:
         try:
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor()
                 cursor.execute("SELECT COUNT(*) FROM rooms")
                 result = cursor.fetchone()

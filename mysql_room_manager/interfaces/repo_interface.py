@@ -3,8 +3,7 @@ from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Optional
 
 
-class StudentRepositoryInterface(ABC):
-    
+class StudentRepoInterface(ABC):
     @abstractmethod
     def insert_students(self, students: List[Dict[str, Any]]) -> int:
         pass
@@ -22,8 +21,7 @@ class StudentRepositoryInterface(ABC):
         pass
 
 
-class RoomRepositoryInterface(ABC):
-    
+class RoomRepoInterface(ABC): 
     @abstractmethod
     def insert_rooms(self, rooms: List[Dict[str, Any]]) -> int:
         pass
@@ -37,7 +35,7 @@ class RoomRepositoryInterface(ABC):
         pass
 
 
-class AnalyticsRepositoryInterface(ABC):
+class AnalyticsRepoInterface(ABC): 
     
     @abstractmethod
     def get_rooms_with_student_count(self) -> List[Dict[str, Any]]:
@@ -48,10 +46,9 @@ class AnalyticsRepositoryInterface(ABC):
         pass
     
     @abstractmethod
-    def get_top_rooms_by_age_difference(self, limit: int = 5) -> List[Dict[str, Any]]:
+    def get_top_rooms_by_age_diff(self, limit: int = 5) -> List[Dict[str, Any]]: 
         pass
     
     @abstractmethod
     def get_mixed_gender_rooms(self) -> List[Dict[str, Any]]:
         pass
-

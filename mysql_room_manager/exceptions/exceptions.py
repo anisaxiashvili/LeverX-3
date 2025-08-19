@@ -1,10 +1,8 @@
-from typing import List
-
-class StudentRoomDBError(Exception):
+class StudentRoomError(Exception):
     pass
 
 
-class DatabaseConnectionError(StudentRoomDBError):
+class DbConnError(StudentRoomError):
     
     def __init__(self, message: str, host: str = None, database: str = None):
         self.host = host
@@ -12,11 +10,11 @@ class DatabaseConnectionError(StudentRoomDBError):
         super().__init__(message)
 
 
-class DatabaseSchemaError(StudentRoomDBError):
+class SchemaError(StudentRoomError): 
     pass
 
 
-class DataImportError(StudentRoomDBError):
+class ImportError(StudentRoomError): 
     
     def __init__(self, message: str, file_path: str = None, record_count: int = None):
         self.file_path = file_path
@@ -24,7 +22,7 @@ class DataImportError(StudentRoomDBError):
         super().__init__(message)
 
 
-class QueryExecutionError(StudentRoomDBError):
+class QueryError(StudentRoomError):  
     
     def __init__(self, message: str, query: str = None, params: tuple = None):
         self.query = query
@@ -32,16 +30,16 @@ class QueryExecutionError(StudentRoomDBError):
         super().__init__(message)
 
 
-class ValidationError(StudentRoomDBError):
+class ValidationError(StudentRoomError):
     pass
 
 
-class ConfigurationError(StudentRoomDBError):
+class ConfigError(StudentRoomError): 
     pass
 
-class UnsupportedFormatError(StudentRoomDBError):
-    
-    def __init__(self, format_name: str, supported_formats: List[str]):
+
+class UnsupportedFormatError(StudentRoomError):
+    def __init__(self, format_name: str, supported_formats: list):
         self.format_name = format_name
         self.supported_formats = supported_formats
         message = f"Unsupported format '{format_name}'. Supported formats: {', '.join(supported_formats)}"

@@ -1,9 +1,8 @@
-"""Data loader interface definitions."""
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any
 
 
-class DataLoaderInterface(ABC):
+class LoaderInterface(ABC):
     
     @abstractmethod
     def load_students(self, file_path: str) -> List[Dict[str, Any]]:

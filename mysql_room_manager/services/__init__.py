@@ -1,11 +1,9 @@
-"""Services layer for MySQL Student Room Manager."""
-
-from .data_import_service import DataImportService
-from .analytics_service import AnalyticsService
-from .database_optimization_service import DatabaseOptimizationService
+from .import_svc import ImportSvc
+from .analytics_svc import AnalyticsSvc
+from .opt_svc import OptSvc
 
 __all__ = [
-    'DataImportService',
-    'AnalyticsService',
-    'DatabaseOptimizationService'
+    'ImportSvc',
+    'AnalyticsSvc',
+    'OptSvc'
 ]

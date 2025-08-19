@@ -1,17 +1,15 @@
 import logging
 from typing import List, Dict, Any
-
-from ..database.query_optimizer import QueryOptimizer
+from ..database.optimizer import Optimizer
 from ..queries.analytics_queries import *
 
-
-class DatabaseOptimizationService:
+class OptSvc:
     
-    def __init__(self, query_optimizer: QueryOptimizer):
-        self.query_optimizer = query_optimizer
+    def __init__(self, optimizer: Optimizer):
+        self.optimizer = optimizer 
         self.logger = logging.getLogger(__name__)
     
-    def analyze_query_performance(self) -> Dict[str, Any]:
+    def analyze_query_perf(self) -> Dict[str, Any]:
         try:
             self.logger.info("Analyzing query performance")
             
@@ -26,20 +24,20 @@ class DatabaseOptimizationService:
             
             for query_name, query in queries_to_analyze:
                 self.logger.debug(f"Analyzing query: {query_name}")
-                analysis = self.query_optimizer.analyze_query_performance(query)
+                analysis = self.optimizer.analyze_query_perf(query)
                 analysis_results[query_name] = analysis
             
             return {
                 'query_analyses': analysis_results,
-                'table_statistics': self.query_optimizer.get_table_statistics(),
-                'index_statistics': self.query_optimizer.get_index_usage_statistics()
+                'table_statistics': self.optimizer.get_table_stats(),
+                'index_statistics': self.optimizer.get_index_usage_stats()
             }
             
         except Exception as e:
             self.logger.error(f"Query performance analysis failed: {e}")
             return {'error': str(e)}
     
-    def get_optimization_recommendations(self) -> List[str]:
+    def get_opt_recommendations(self) -> List[str]:
         try:
             recommendations = [
                 "Composite index on (room_id, sex, age_years) for mixed gender analysis",

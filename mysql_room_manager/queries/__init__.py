@@ -1,8 +1,6 @@
-"""SQL queries for MySQL Student Room Manager."""
-
 from .schema_queries import *
 from .analytics_queries import *
-from .optimization_queries import *
+from .opt_queries import *
 
 __all__ = [
     'CREATE_DATABASE_QUERY',

@@ -4,30 +4,28 @@ from typing import Optional
 
 
 @dataclass
-class DatabaseConfig:
-    
+class DbConfig: 
     host: str = "localhost"
     port: int = 3306
     user: str = "root"
     password: str = ""
     database: str = "student_room_analytics"
     charset: str = "utf8mb4"
-
+    
     pool_name: str = "student_room_pool"
     pool_size: int = 10
     pool_reset_session: bool = True
-
+    
     connection_timeout: int = 30
     autocommit: bool = False
-
+    
     use_ssl: bool = False
     ssl_ca: Optional[str] = None
     ssl_cert: Optional[str] = None
     ssl_key: Optional[str] = None
     
     @classmethod
-    def from_env(cls) -> 'DatabaseConfig':
-        """Create configuration from environment variables."""
+    def from_env(cls) -> 'DbConfig':
         return cls(
             host=os.getenv('DB_HOST', 'localhost'),
             port=int(os.getenv('DB_PORT', '3306')),
@@ -43,8 +41,7 @@ class DatabaseConfig:
             ssl_key=os.getenv('DB_SSL_KEY')
         )
     
-    def to_connection_dict(self) -> dict:
-        """Convert to dictionary for mysql.connector."""
+    def to_conn_dict(self) -> dict: 
         config = {
             'host': self.host,
             'port': self.port,
@@ -68,4 +65,3 @@ class DatabaseConfig:
                 config['ssl'] = ssl_config
         
         return config
-

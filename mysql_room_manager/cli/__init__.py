@@ -1,7 +1,5 @@
-"""Command line interface for MySQL Student Room Manager."""
+from .controller import Controller
+from .arg_parser import ArgParser
+from .config import Config
 
-from .cli_controller import CLIController
-from .argument_parser import ArgumentParser
-from .cli_config import CLIConfig
-
-__all__ = ['CLIController', 'ArgumentParser', 'CLIConfig']
+__all__ = ['Controller', 'ArgParser', 'Config']

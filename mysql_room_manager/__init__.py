@@ -2,20 +2,19 @@ __version__ = "2.0.0"
 __author__ = "MySQL Student Room Analytics Team"
 __description__ = "Enterprise MySQL solution for student-room analytics with query optimization"
 
-# Main API exports
-from .services.data_import_service import DataImportService
-from .services.analytics_service import AnalyticsService
-from .services.database_optimization_service import DatabaseOptimizationService
-from .database.connection_manager import ConnectionManager
-from .database.schema_manager import SchemaManager
-from .cli.cli_controller import CLIController
+from .services.import_svc import ImportSvc
+from .services.analytics_svc import AnalyticsSvc
+from .services.opt_svc import OptSvc
+from .database.conn_manager import ConnManager
+from .database.schema_mgr import SchemaMgr
+from .cli.controller import Controller
 
 __all__ = [
-    'DataImportService',
-    'AnalyticsService', 
-    'DatabaseOptimizationService',
-    'ConnectionManager',
-    'SchemaManager',
-    'CLIController',
+    'ImportSvc',      
+    'AnalyticsSvc',   
+    'OptSvc',         
+    'ConnManager',    
+    'SchemaMgr',      
+    'Controller',     
     '__version__'
 ]

@@ -9,7 +9,6 @@ FROM information_schema.tables
 WHERE table_schema = %s
 ORDER BY table_size_mb DESC;
 """
-
 INDEX_USAGE_ANALYSIS_QUERY = """
 SELECT 
     table_name,
@@ -39,3 +38,4 @@ WHERE schema_name = %s
 ORDER BY avg_timer_wait DESC
 LIMIT 10;
 """
+

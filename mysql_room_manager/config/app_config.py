@@ -1,14 +1,12 @@
-"""Application configuration settings."""
 from dataclasses import dataclass
-from typing import List
-from .database_config import DatabaseConfig
+from .db_config import DbConfig
 
 
 @dataclass
 class AppConfig:
     APP_NAME: str = "MySQL Student Room Manager"
     APP_VERSION: str = "2.0.0"
-    database: DatabaseConfig = None
+    database: DbConfig = None
     
     BATCH_SIZE: int = 1000
     MAX_RETRIES: int = 3
@@ -26,6 +24,6 @@ class AppConfig:
     
     def __post_init__(self):
         if self.database is None:
-            self.database = DatabaseConfig.from_env()
+            self.database = DbConfig.from_env()
 
 APP_CONFIG = AppConfig()

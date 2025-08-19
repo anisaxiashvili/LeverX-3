@@ -1,19 +1,18 @@
 import logging
 from typing import List, Dict, Any, Optional
-
-from ...interfaces.repository_interface import StudentRepositoryInterface
-from ...database.connection_manager import ConnectionManager
-from ...database.transaction_manager import TransactionManager
+from ...interfaces.repo_interface import StudentRepoInterface
+from ...database.conn_manager import ConnManager
+from ...database.tx_manager import TxManager
 from ...models.student import Student
-from ...exceptions.custom_exceptions import QueryExecutionError
+from ...exceptions.exceptions import QueryError
 from ...utils.date_utils import datetime_to_mysql_string
 
 
-class StudentRepository(StudentRepositoryInterface):
+class StudentRepo(StudentRepoInterface):  
     
-    def __init__(self, connection_manager: ConnectionManager):
-        self.connection_manager = connection_manager
-        self.transaction_manager = TransactionManager(connection_manager)
+    def __init__(self, conn_manager: ConnManager):
+        self.conn_manager = conn_manager  
+        self.tx_manager = TxManager(conn_manager)  
         self.logger = logging.getLogger(__name__)
     
     def insert_students(self, students: List[Dict[str, Any]]) -> int:
@@ -24,7 +23,7 @@ class StudentRepository(StudentRepositoryInterface):
             self.logger.info(f"Inserting {len(students)} students")
             
             student_models = [Student.from_dict(student_data) for student_data in students]
-
+            
             student_tuples = []
             for student in student_models:
                 student_tuples.append((
@@ -35,7 +34,7 @@ class StudentRepository(StudentRepositoryInterface):
                     student.room
                 ))
             
-            with self.transaction_manager.transaction() as conn:
+            with self.tx_manager.transaction() as conn:
                 cursor = conn.cursor()
                 
                 insert_query = """
@@ -58,11 +57,11 @@ class StudentRepository(StudentRepositoryInterface):
         except Exception as e:
             error_msg = f"Failed to insert students: {e}"
             self.logger.error(error_msg)
-            raise QueryExecutionError(error_msg)
+            raise QueryError(error_msg)
     
     def get_student_by_id(self, student_id: int) -> Optional[Dict[str, Any]]:
         try:
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor(dictionary=True)
                 cursor.execute(
                     "SELECT id, name, birthday, sex, room_id, age_years FROM students WHERE id = %s", 
@@ -78,7 +77,7 @@ class StudentRepository(StudentRepositoryInterface):
     
     def get_students_by_room(self, room_id: int) -> List[Dict[str, Any]]:
         try:
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor(dictionary=True)
                 cursor.execute(
                     "SELECT id, name, birthday, sex, room_id, age_years FROM students WHERE room_id = %s", 
@@ -94,7 +93,7 @@ class StudentRepository(StudentRepositoryInterface):
     
     def count_students(self) -> int:
         try:
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor()
                 cursor.execute("SELECT COUNT(*) FROM students")
                 result = cursor.fetchone()

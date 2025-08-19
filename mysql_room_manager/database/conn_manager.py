@@ -1,18 +1,15 @@
-"""Database connection management."""
 import mysql.connector
 from mysql.connector import pooling
 import logging
 from contextlib import contextmanager
 from typing import Optional, Any
+from ..interfaces.db_interface import DbConnInterface
+from ..config.db_config import DbConfig
+from ..exceptions.exceptions import DbConnError
 
-from ..interfaces.database_interface import DatabaseConnectionInterface
-from ..config.database_config import DatabaseConfig
-from ..exceptions.custom_exceptions import DatabaseConnectionError
 
-
-class ConnectionManager(DatabaseConnectionInterface):
-    
-    def __init__(self, config: DatabaseConfig):
+class ConnManager(DbConnInterface): 
+    def __init__(self, config: DbConfig):
         self.config = config
         self.logger = logging.getLogger(__name__)
         self._pool: Optional[pooling.MySQLConnectionPool] = None
@@ -23,7 +20,7 @@ class ConnectionManager(DatabaseConnectionInterface):
             if self._pool is None:
                 self.logger.info(f"Creating connection pool to {self.config.host}:{self.config.port}")
                 
-                pool_config = self.config.to_connection_dict()
+                pool_config = self.config.to_conn_dict()
                 pool_config.update({
                     'pool_name': self.config.pool_name,
                     'pool_size': self.config.pool_size,
@@ -38,7 +35,7 @@ class ConnectionManager(DatabaseConnectionInterface):
         except mysql.connector.Error as e:
             error_msg = f"Failed to connect to MySQL database: {e}"
             self.logger.error(error_msg)
-            raise DatabaseConnectionError(
+            raise DbConnError(
                 error_msg, 
                 self.config.host, 
                 self.config.database
@@ -60,7 +57,7 @@ class ConnectionManager(DatabaseConnectionInterface):
         return self._pool is not None
     
     @contextmanager
-    def get_connection(self):
+    def get_conn(self): 
         connection = None
         try:
             connection = self.connect()
@@ -78,9 +75,9 @@ class ConnectionManager(DatabaseConnectionInterface):
                 connection.close()
                 self.logger.debug("Database connection returned to pool")
     
-    def test_connection(self) -> bool:
+    def test_conn(self) -> bool: 
         try:
-            with self.get_connection() as conn:
+            with self.get_conn() as conn:
                 cursor = conn.cursor()
                 cursor.execute("SELECT 1")
                 result = cursor.fetchone()

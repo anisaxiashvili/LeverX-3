@@ -1,23 +1,21 @@
-"""Custom exceptions for MySQL Student Room Manager."""
-
-from .custom_exceptions import (
-    StudentRoomDBError,
-    DatabaseConnectionError,
-    DatabaseSchemaError,
-    DataImportError,
-    QueryExecutionError,
+from .exceptions import (
+    StudentRoomError,
+    DbConnError,
+    SchemaError,
+    ImportError,
+    QueryError,
     ValidationError,
-    ConfigurationError,
+    ConfigError,
     UnsupportedFormatError
 )
 
 __all__ = [
-    'StudentRoomDBError',
-    'DatabaseConnectionError', 
-    'DatabaseSchemaError',
-    'DataImportError',
-    'QueryExecutionError',
+    'StudentRoomError',
+    'DbConnError', 
+    'SchemaError',
+    'ImportError',
+    'QueryError',
     'ValidationError',
-    'ConfigurationError',
+    'ConfigError',
     'UnsupportedFormatError'
 ]

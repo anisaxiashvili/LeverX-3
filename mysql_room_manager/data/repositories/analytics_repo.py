@@ -1,32 +1,31 @@
-"""Analytics repository for complex database queries."""
 import logging
 from typing import List, Dict, Any
 
-from ...interfaces.repository_interface import AnalyticsRepositoryInterface
-from ...database.connection_manager import ConnectionManager
+from ...interfaces.repo_interface import AnalyticsRepoInterface
+from ...database.conn_manager import ConnManager
 from ...queries.analytics_queries import *
-from ...models.query_result import (
-    RoomStudentCount, RoomAverageAge, RoomAgeDifference, MixedGenderRoom
+from ...models.result import (
+    RoomStudentCount, RoomAvgAge, RoomAgeDiff, MixedGenderRoom 
 )
-from ...exceptions.custom_exceptions import QueryExecutionError
+from ...exceptions.exceptions import QueryError
 
 
-class AnalyticsRepository(AnalyticsRepositoryInterface):
+class AnalyticsRepo(AnalyticsRepoInterface):  
     
-    def __init__(self, connection_manager: ConnectionManager):
-        self.connection_manager = connection_manager
+    def __init__(self, conn_manager: ConnManager):
+        self.conn_manager = conn_manager  
         self.logger = logging.getLogger(__name__)
     
     def get_rooms_with_student_count(self) -> List[Dict[str, Any]]:
         try:
             self.logger.info("Executing query: rooms with student count")
             
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor(dictionary=True)
                 cursor.execute(ROOMS_WITH_STUDENT_COUNT_QUERY)
                 results = cursor.fetchall()
                 cursor.close()
-
+            
             room_counts = [
                 RoomStudentCount(
                     room_id=row['room_id'],
@@ -42,20 +41,20 @@ class AnalyticsRepository(AnalyticsRepositoryInterface):
         except Exception as e:
             error_msg = f"Failed to get rooms with student count: {e}"
             self.logger.error(error_msg)
-            raise QueryExecutionError(error_msg)
+            raise QueryError(error_msg)
     
     def get_top_rooms_by_avg_age(self, limit: int = 5) -> List[Dict[str, Any]]:
         try:
             self.logger.info(f"Executing query: top {limit} rooms by average age")
             
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor(dictionary=True)
                 cursor.execute(TOP_ROOMS_BY_AVG_AGE_QUERY, (limit,))
                 results = cursor.fetchall()
                 cursor.close()
             
             room_ages = [
-                RoomAverageAge(
+                RoomAvgAge(  
                     room_id=row['room_id'],
                     room_name=row['room_name'],
                     average_age=float(row['average_age']),
@@ -70,20 +69,20 @@ class AnalyticsRepository(AnalyticsRepositoryInterface):
         except Exception as e:
             error_msg = f"Failed to get rooms by average age: {e}"
             self.logger.error(error_msg)
-            raise QueryExecutionError(error_msg)
+            raise QueryError(error_msg)
     
-    def get_top_rooms_by_age_difference(self, limit: int = 5) -> List[Dict[str, Any]]:
+    def get_top_rooms_by_age_diff(self, limit: int = 5) -> List[Dict[str, Any]]:  
         try:
             self.logger.info(f"Executing query: top {limit} rooms by age difference")
             
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor(dictionary=True)
                 cursor.execute(TOP_ROOMS_BY_AGE_DIFFERENCE_QUERY, (limit,))
                 results = cursor.fetchall()
                 cursor.close()
             
             room_age_diffs = [
-                RoomAgeDifference(
+                RoomAgeDiff(  
                     room_id=row['room_id'],
                     room_name=row['room_name'],
                     age_difference=row['age_difference'],
@@ -100,13 +99,13 @@ class AnalyticsRepository(AnalyticsRepositoryInterface):
         except Exception as e:
             error_msg = f"Failed to get rooms by age difference: {e}"
             self.logger.error(error_msg)
-            raise QueryExecutionError(error_msg)
+            raise QueryError(error_msg)
     
     def get_mixed_gender_rooms(self) -> List[Dict[str, Any]]:
         try:
             self.logger.info("Executing query: mixed gender rooms")
             
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor(dictionary=True)
                 cursor.execute(MIXED_GENDER_ROOMS_QUERY)
                 results = cursor.fetchall()
@@ -129,5 +128,4 @@ class AnalyticsRepository(AnalyticsRepositoryInterface):
         except Exception as e:
             error_msg = f"Failed to get mixed gender rooms: {e}"
             self.logger.error(error_msg)
-            raise QueryExecutionError(error_msg)
-
+            raise QueryError(error_msg)

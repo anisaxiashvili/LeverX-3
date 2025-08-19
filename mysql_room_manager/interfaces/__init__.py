@@ -1,27 +1,25 @@
-"""Interface definitions for MySQL Student Room Manager."""
-
-from .database_interface import (
-    DatabaseConnectionInterface,
-    DatabaseSchemaInterface, 
-    TransactionManagerInterface
+from .db_interface import (
+    DbConnInterface,
+    SchemaInterface, 
+    TxInterface
 )
-from .repository_interface import (
-    StudentRepositoryInterface,
-    RoomRepositoryInterface,
-    AnalyticsRepositoryInterface
+from .repo_interface import (
+    StudentRepoInterface,
+    RoomRepoInterface,
+    AnalyticsRepoInterface
 )
-from .data_loader_interface import DataLoaderInterface
-from .query_executor_interface import QueryExecutorInterface
+from .loader_interface import LoaderInterface
+from .executor_interface import ExecutorInterface
 
 __all__ = [
-    'DatabaseConnectionInterface',
-    'DatabaseSchemaInterface',
-    'TransactionManagerInterface',
-    'StudentRepositoryInterface', 
-    'RoomRepositoryInterface',
-    'AnalyticsRepositoryInterface',
-    'DataLoaderInterface',
-    'QueryExecutorInterface'
+    'DbConnInterface',
+    'SchemaInterface',
+    'TxInterface',
+    'StudentRepoInterface', 
+    'RoomRepoInterface',
+    'AnalyticsRepoInterface',
+    'LoaderInterface',
+    'ExecutorInterface'
 ]
 
 

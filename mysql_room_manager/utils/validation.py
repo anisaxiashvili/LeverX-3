@@ -1,5 +1,5 @@
 from typing import Any, List, Dict
-from ..exceptions.custom_exceptions import ValidationError
+from ..exceptions.exceptions import ValidationError
 
 
 def validate_positive_integer(value: Any, field_name: str) -> None:

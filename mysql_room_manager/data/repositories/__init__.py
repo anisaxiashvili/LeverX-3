@@ -1,7 +1,5 @@
-"""Data repositories for MySQL Student Room Manager."""
+from .student_repo import StudentRepo
+from .room_repo import RoomRepo
+from .analytics_repo import AnalyticsRepo
 
-from .student_repository import StudentRepository
-from .room_repository import RoomRepository
-from .analytics_repository import AnalyticsRepository
-
-__all__ = ['StudentRepository', 'RoomRepository', 'AnalyticsRepository']
+__all__ = ['StudentRepo', 'RoomRepo', 'AnalyticsRepo']

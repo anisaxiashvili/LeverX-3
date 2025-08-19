@@ -1,10 +1,9 @@
-"""Database interface definitions."""
 from abc import ABC, abstractmethod
 from typing import List, Dict, Any, Optional, Tuple
 from contextlib import contextmanager
 
 
-class DatabaseConnectionInterface(ABC):
+class DbConnInterface(ABC): 
     
     @abstractmethod
     def connect(self) -> Any:
@@ -20,14 +19,14 @@ class DatabaseConnectionInterface(ABC):
     
     @abstractmethod
     @contextmanager
-    def get_connection(self):
+    def get_conn(self):
         pass
 
 
-class DatabaseSchemaInterface(ABC):
+class SchemaInterface(ABC): 
     
     @abstractmethod
-    def create_database(self) -> None:
+    def create_db(self) -> None: 
         pass
     
     @abstractmethod
@@ -47,7 +46,7 @@ class DatabaseSchemaInterface(ABC):
         pass
 
 
-class TransactionManagerInterface(ABC):
+class TxInterface(ABC):
     
     @abstractmethod
     @contextmanager

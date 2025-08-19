@@ -1,18 +1,18 @@
 from typing import Dict, Type, List
 
-from ...interfaces.data_loader_interface import DataLoaderInterface
-from ...exceptions.custom_exceptions import UnsupportedFormatError
-from .json_data_loader import JSONDataLoader
+from ...interfaces.loader_interface import LoaderInterface
+from ...exceptions.exceptions import UnsupportedFormatError
+from .json_loader import JsonLoader
 
 
-class DataLoaderFactory:
+class LoaderFactory: 
     
-    _loaders: Dict[str, Type[DataLoaderInterface]] = {
-        'json': JSONDataLoader,
+    _loaders: Dict[str, Type[LoaderInterface]] = {
+        'json': JsonLoader,
     }
     
     @classmethod
-    def create_loader(cls, format_name: str) -> DataLoaderInterface:
+    def create_loader(cls, format_name: str) -> LoaderInterface:
         format_lower = format_name.lower()
         loader_class = cls._loaders.get(format_lower)
         

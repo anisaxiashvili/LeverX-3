@@ -1,4 +1,4 @@
-from .json_data_loader import JSONDataLoader
-from .data_loader_factory import DataLoaderFactory
+from .json_loader import JsonLoader
+from .loader_factory import LoaderFactory
 
-__all__ = ['JSONDataLoader', 'DataLoaderFactory']
+__all__ = ['JsonLoader', 'LoaderFactory']

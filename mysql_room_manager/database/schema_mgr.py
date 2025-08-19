@@ -1,26 +1,25 @@
-"""Database schema management."""
 import logging
 from typing import List
-from ..database.connection_manager import DatabaseConfig
-from ..interfaces.database_interface import DatabaseSchemaInterface
-from ..database.connection_manager import ConnectionManager
+from ..interfaces.db_interface import SchemaInterface
+from ..database.conn_manager import ConnManager
 from ..queries.schema_queries import *
-from ..exceptions.custom_exceptions import DatabaseSchemaError
+from ..config.db_config import DbConfig
+from ..exceptions.exceptions import SchemaError
 
 
-class SchemaManager(DatabaseSchemaInterface):
+class SchemaMgr(SchemaInterface):  
     
-    def __init__(self, connection_manager: ConnectionManager):
-        self.connection_manager = connection_manager
+    def __init__(self, conn_manager: ConnManager):
+        self.conn_manager = conn_manager  
         self.logger = logging.getLogger(__name__)
-        self.database_name = connection_manager.config.database
+        self.db_name = conn_manager.config.database  
     
-    def create_database(self) -> None:
+    def create_db(self) -> None:
         try:
-            self.logger.info(f"Creating database: {self.database_name}")
-            
-            config = self.connection_manager.config
-            temp_config = DatabaseConfig(
+            self.logger.info(f"Creating database: {self.db_name}")
+
+            config = self.conn_manager.config
+            temp_config = DbConfig(
                 host=config.host,
                 port=config.port,
                 user=config.user,
@@ -28,28 +27,27 @@ class SchemaManager(DatabaseSchemaInterface):
                 database="",
                 charset=config.charset
             )
-            temp_manager = ConnectionManager(temp_config)
+            temp_manager = ConnManager(temp_config)
             
-            with temp_manager.get_connection() as conn:
+            with temp_manager.get_conn() as conn:
                 cursor = conn.cursor()
-                query = CREATE_DATABASE_QUERY.format(database_name=self.database_name)
+                query = CREATE_DATABASE_QUERY.format(database_name=self.db_name)
                 cursor.execute(query)
                 conn.commit()
                 cursor.close()
             
-            self.logger.info(f"Database {self.database_name} created successfully")
+            self.logger.info(f"Database {self.db_name} created successfully")
             
         except Exception as e:
-            error_msg = f"Failed to create database {self.database_name}: {e}"
+            error_msg = f"Failed to create database {self.db_name}: {e}"
             self.logger.error(error_msg)
-            raise DatabaseSchemaError(error_msg)
+            raise SchemaError(error_msg)
     
     def create_tables(self) -> None:
-        """Create all required tables with proper relationships."""
         try:
             self.logger.info("Creating database tables")
             
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor()
                 
                 tables = [
@@ -70,14 +68,15 @@ class SchemaManager(DatabaseSchemaInterface):
         except Exception as e:
             error_msg = f"Failed to create tables: {e}"
             self.logger.error(error_msg)
-            raise DatabaseSchemaError(error_msg)
+            raise SchemaError(error_msg)
     
     def drop_tables(self) -> None:
         try:
             self.logger.info("Dropping database tables")
             
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor()
+                
                 drop_queries = [
                     DROP_STUDENTS_TABLE_QUERY,
                     DROP_ROOMS_TABLE_QUERY
@@ -94,13 +93,13 @@ class SchemaManager(DatabaseSchemaInterface):
         except Exception as e:
             error_msg = f"Failed to drop tables: {e}"
             self.logger.error(error_msg)
-            raise DatabaseSchemaError(error_msg)
+            raise SchemaError(error_msg)
     
     def create_indexes(self) -> None:
         try:
             self.logger.info("Creating optimization indexes")
             
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor()
                 
                 for i, index_query in enumerate(OPTIMIZATION_INDEXES):
@@ -118,13 +117,13 @@ class SchemaManager(DatabaseSchemaInterface):
         except Exception as e:
             error_msg = f"Failed to create indexes: {e}"
             self.logger.error(error_msg)
-            raise DatabaseSchemaError(error_msg)
+            raise SchemaError(error_msg)
     
     def table_exists(self, table_name: str) -> bool:
         try:
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor()
-                cursor.execute(TABLE_EXISTS_QUERY, (self.database_name, table_name))
+                cursor.execute(TABLE_EXISTS_QUERY, (self.db_name, table_name))
                 result = cursor.fetchone()
                 cursor.close()
                 return result[0] > 0
@@ -135,9 +134,9 @@ class SchemaManager(DatabaseSchemaInterface):
     
     def get_table_info(self) -> List[dict]:
         try:
-            with self.connection_manager.get_connection() as conn:
+            with self.conn_manager.get_conn() as conn:
                 cursor = conn.cursor(dictionary=True)
-                cursor.execute(TABLE_SIZE_ANALYSIS_QUERY, (self.database_name,))
+                cursor.execute(TABLE_SIZE_ANALYSIS_QUERY, (self.db_name,))
                 results = cursor.fetchall()
                 cursor.close()
                 return results

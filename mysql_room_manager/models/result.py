@@ -1,4 +1,3 @@
-"""Query result models for analytics."""
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
@@ -18,7 +17,7 @@ class RoomStudentCount:
 
 
 @dataclass
-class RoomAverageAge:
+class RoomAvgAge:
     room_id: int
     room_name: str
     average_age: float
@@ -34,7 +33,7 @@ class RoomAverageAge:
 
 
 @dataclass
-class RoomAgeDifference:
+class RoomAgeDiff:
     room_id: int
     room_name: str
     age_difference: int
@@ -69,3 +68,4 @@ class MixedGenderRoom:
             'female_count': self.female_count,
             'total_students': self.total_students
         }
+

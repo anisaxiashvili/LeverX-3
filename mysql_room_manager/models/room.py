@@ -1,4 +1,3 @@
-"""Room data model."""
 from dataclasses import dataclass
 from typing import Dict, Any
 from ..utils.validation import validate_positive_integer, validate_non_empty_string

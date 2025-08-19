@@ -1,13 +1,11 @@
-"""Database layer for MySQL Student Room Manager."""
-
-from .connection_manager import ConnectionManager
-from .schema_manager import SchemaManager
-from .transaction_manager import TransactionManager
-from .query_optimizer import QueryOptimizer
+from .conn_manager import ConnManager
+from .schema_mgr import SchemaMgr
+from .tx_manager import TxManager
+from .optimizer import Optimizer
 
 __all__ = [
-    'ConnectionManager',
-    'SchemaManager', 
-    'TransactionManager',
-    'QueryOptimizer'
+    'ConnManager',
+    'SchemaMgr', 
+    'TxManager',
+    'Optimizer'
 ]
